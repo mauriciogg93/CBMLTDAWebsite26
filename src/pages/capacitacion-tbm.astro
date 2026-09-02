@@ -1,0 +1,116 @@
+---
+import { Icon } from 'astro-icon/components';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Seccion from '../components/Seccion.astro';
+import BotonWhatsApp from '../components/BotonWhatsApp.astro';
+import VideoYouTube from '../components/VideoYouTube.astro';
+
+// Training material for the TBM EP100 bill counter. Same URL as the WordPress page
+// (/capacitacion-tbm/, password-protected until 2026-09-02) so the links CBM already
+// gave its customers keep working. The manual lives in public/manuales/ and is served
+// as-is. Adding a video = add an object, in viewing order (they are numbered on the page).
+const manual = {
+  href: '/manuales/tbm-ep100-manual-de-usuario-v2-1.pdf',
+  titulo: 'Manual de usuario TBM EP100',
+  detalle: 'Versión 2.1 · PDF de 36 páginas (1,8 MB)',
+};
+
+const videos = [
+  { id: 'LBZOcXa8PeU', titulo: 'Conexión, encendido e instrucciones básicas' },
+  { id: '5yYMxFvIxr8', titulo: 'Resultados de conteo y gran total' },
+  { id: 'Jive0hA-160', titulo: 'Modos de conteo y clasificación por denominación' },
+  { id: 'gLCI7Gi-le0', titulo: 'Clasificación por cara y orientación' },
+  { id: 'icirqL11AHY', titulo: 'Clasificación por calidad' },
+  { id: 'bY0kfrB7WVA', titulo: 'Armado de fajos y función ADD' },
+  { id: 'EZicrr3iYFo', titulo: 'Limpieza, desatascos y actualización de software' },
+];
+---
+
+<BaseLayout
+  titulo="Capacitación TBM EP100"
+  descripcion="Manual de usuario y 7 videos de capacitación de la contadora de billetes TBM EP100: conexión, modos de conteo, clasificación, armado de fajos y limpieza."
+>
+  <Seccion
+    nivel="h1"
+    tono="gris"
+    antetitulo="Soporte"
+    titulo="Capacitación TBM EP100"
+    subtitulo="Todo lo que necesita para operar su contadora de billetes TBM EP100: el manual de usuario y siete videos cortos, en el orden en que conviene verlos."
+  >
+    <div class="grid gap-6 md:grid-cols-2">
+      <div class="rounded-xl border border-gray-200 bg-white p-6">
+        <div class="flex h-14 w-14 items-center justify-center rounded-full bg-marca-50 text-marca-600">
+          <Icon name="lucide:file-text" class="h-7 w-7" aria-hidden="true" />
+        </div>
+        <h2 class="mt-4 text-xl font-semibold text-gray-900">{manual.titulo}</h2>
+        <p class="mt-2 text-gray-600">{manual.detalle}</p>
+        <a
+          href={manual.href}
+          target="_blank"
+          rel="noopener"
+          class="mt-4 inline-flex items-center gap-2 rounded-lg border border-marca-300 px-5 py-3 font-semibold text-marca-700 transition-colors hover:bg-marca-50"
+        >
+          <Icon name="lucide:download" class="h-5 w-5" aria-hidden="true" />
+          Descargar el manual (PDF)
+          <span class="sr-only"> (abre en una pestaña nueva)</span>
+        </a>
+      </div>
+      <div class="rounded-xl border border-gray-200 bg-white p-6">
+        <div class="flex h-14 w-14 items-center justify-center rounded-full bg-marca-50 text-marca-600">
+          <Icon name="lucide:banknote" class="h-7 w-7" aria-hidden="true" />
+        </div>
+        <h2 class="mt-4 text-xl font-semibold text-gray-900">¿Aún no tiene la TBM EP100?</h2>
+        <p class="mt-2 text-gray-600">
+          Contadora, clasificadora y validadora de billetes de 2 bolsillos, fabricada en Corea
+          del Sur. Conozca sus características y cotícela.
+        </p>
+        <a
+          href="/productos/tbm-ep100-contadora-de-billetes/"
+          class="mt-4 inline-block font-semibold text-acento-600 hover:underline"
+        >
+          Ver la contadora TBM EP100 →
+        </a>
+      </div>
+    </div>
+  </Seccion>
+
+  <Seccion
+    id="videos"
+    antetitulo="Paso a paso"
+    titulo="Videos de capacitación"
+    subtitulo="Siete videos en orden: empiece por el primero si es su primer contacto con el equipo."
+  >
+    <ol class="grid gap-10 md:grid-cols-2">
+      {
+        videos.map((v, i) => (
+          <li>
+            <h3 class="mb-3 text-lg font-semibold text-gray-900">
+              <span class="text-acento-600">Video {i + 1}.</span> {v.titulo}
+            </h3>
+            <VideoYouTube id={v.id} titulo={`Capacitación TBM EP100 | Video ${i + 1} | ${v.titulo}`} />
+          </li>
+        ))
+      }
+    </ol>
+  </Seccion>
+
+  <Seccion
+    tono="oscuro"
+    titulo="¿Necesita soporte técnico para su TBM EP100?"
+    subtitulo="Escríbanos por WhatsApp: contamos con servicio técnico propio y repuestos originales."
+  >
+    <div class="flex flex-wrap gap-4">
+      <BotonWhatsApp
+        variante="contraste"
+        etiqueta="Escribir por WhatsApp"
+        mensaje="Hola CBM, tengo una contadora de billetes TBM EP100 y necesito soporte técnico."
+      />
+      <a
+        href="/contactenos/"
+        class="inline-flex items-center rounded-lg border border-white/40 px-5 py-3 font-semibold text-white transition-colors hover:bg-white/10"
+      >
+        Otros medios de contacto
+      </a>
+    </div>
+  </Seccion>
+</BaseLayout>
