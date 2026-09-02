@@ -86,8 +86,8 @@ Legend: `[x]` done · `[ ]` pending · 🤖 the assistant does it · 🧑 only t
       records and the certificate for `cbmltda.com.co` and `www.cbmltda.com.co`
       (2026-09-02: the first build failed with API error 100117, the apex `A` and the `www`
       `CNAME` imported from DigitalOcean block the Custom Domain and wrangler cannot override
-      them. Pending: the developer deletes both records in DNS → Records and retries the
-      build. That deploy also turned workers.dev off; `workers_dev: true` is now declared)
+      them. The developer deleted both records at 15:45 UTC and the build was retried. That
+      first deploy also turned workers.dev off; `workers_dev: true` is now declared)
 - [ ] 🧑 R3: zone settings after the first deploy with the domain (Always Use HTTPS, www → root)
 - [ ] 🧑 R4: switch off the scripts the zone injects (JavaScript Detections, Web Analytics)
 - [ ] 🤖 `npm run verify` all green with zero warnings; Lighthouse
