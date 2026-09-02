@@ -75,13 +75,15 @@ in this repo (docs, comments, config) is in English.
 [PLAN.md](PLAN.md)) installs the dependencies, runs `npm run check && npm run build` (with
 the link/meta `postbuild` gate: if it fails, nothing is deployed) and publishes the Worker.
 There is no GitHub workflow and no secret to create or rotate: Cloudflare mints its own
-token. A full build takes about a minute and the log ends with `Deployed cbmltda triggers`.
+token. A full build takes about a minute and the log ends with
+`Deployed cbmltdawebsite26 triggers`.
 
 - **Branches other than `main`** produce a Worker *version* with no traffic, not a deploy:
   the bot's "Deployment successful" comment on a PR does not mean it is live. There is a
   preview link only once Preview URLs are enabled (runbook).
 - **After every deploy**: `npm run verify` (while the domain still points at WordPress,
-  `npm run verify -- https://cbmltda.<account>.workers.dev`). CI does not run it.
+  `npm run verify -- https://cbmltdawebsite26.<account>.workers.dev`). CI does not run
+  it.
 - **Manual deploy** (first deploy or debugging): `npx wrangler login` once, then
   `npm run deploy`. Same `wrangler.jsonc`, same result as a Cloudflare build.
 - **Pre-flight without logging in**: `npx wrangler deploy --dry-run --outdir /tmp/wr`

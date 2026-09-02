@@ -72,7 +72,8 @@ Legend: `[x]` done · `[ ]` pending · 🤖 the assistant does it · 🧑 only t
 ## 5. Go-live (Cloudflare Workers)
 
 - [ ] 🧑 R1: connect the repo to Cloudflare Workers Builds (it makes the first deploy)
-- [ ] 🤖 Post-deploy verification: `npm run verify -- https://cbmltda.<account>.workers.dev`
+- [ ] 🤖 Post-deploy verification:
+      `npm run verify -- https://cbmltdawebsite26.<account>.workers.dev`
 - [ ] 🤝 Review the site on workers.dev and decide when to switch WordPress off
 - [ ] 🧑 R2: move the DNS of cbmltda.com.co to Cloudflare (at DigitalOcean today)
 - [ ] 🤖 Enable the `routes` block of `wrangler.jsonc` and push: that deploy creates the DNS
@@ -100,17 +101,18 @@ Legend: `[x]` done · `[ ]` pending · 🤖 the assistant does it · 🧑 only t
 ## Runbook (actions only the human can do)
 
 - **R1 — Connect Workers Builds**: dash.cloudflare.com → Workers & Pages → Create → Workers →
-  *Connect to Git* / *Import a repository* → authorize GitHub and pick `jacoboisaza/cbmltda`
-  (a private repo needs the Cloudflare GitHub app granted on it) → the "Set up your
-  application" form: **Project name** `cbmltda` (must equal `name` in `wrangler.jsonc`) ·
+  *Connect to Git* / *Import a repository* → authorize GitHub and pick
+  `mauriciogg93/CBMLTDAWebsite26` (a private repo needs the Cloudflare GitHub app granted on
+  it) → the "Set up your application" form: **Project name** `cbmltdawebsite26` (must equal
+  `name` in `wrangler.jsonc`) ·
   **Build command** comes prefilled as `npm run build`: replace it with
   `npm run check && npm run build` · **Deploy command** `npx wrangler deploy` · *Builds for
   non-production branches* on · Advanced: non-production deploy command
   `npx wrangler versions upload` (default), Path `/`, **API token** "Create new token"
   (Cloudflare mints it), no variables → **Deploy**. It takes ~1 minute; the production log
-  ends with `Deployed cbmltda triggers`. If the Worker already exists from a manual deploy,
-  connect from Worker → Settings → Build. Report back: the last lines of the log and the
-  `workers.dev` URL. (No `CLOUDFLARE_*` GitHub secrets exist in this flow.)
+  ends with `Deployed cbmltdawebsite26 triggers`. If the Worker already exists from a manual
+  deploy, connect from Worker → Settings → Build. Report back: the last lines of the log and
+  the `workers.dev` URL. (No `CLOUDFLARE_*` GitHub secrets exist in this flow.)
 - **R2 — DNS to Cloudflare**: dash.cloudflare.com → Add a domain → `cbmltda.com.co` → Free
   plan → Cloudflare imports the existing records: check that the **email MX records**
   (contacto@cbmltda.com.co) and the A records of the current WordPress are there → at the
@@ -128,9 +130,9 @@ Legend: `[x]` done · `[ ]` pending · 🤖 the assistant does it · 🧑 only t
   Fight Mode if unwanted); Analytics & Logs → **Web Analytics** → disable, or keep it
   (cookie-free) and say so. The assistant re-runs `verify` (script count) and Lighthouse.
   Traffic numbers stay available without any script in the zone's HTTP analytics.
-- **R5 — Preview URLs (optional)**: Worker `cbmltda` → Settings → Domains & Routes → enable
-  the `workers.dev` subdomain and Preview URLs. Without this a PR has no preview link (the
-  bot still says "Deployment successful", but it is a version with no traffic).
+- **R5 — Preview URLs (optional)**: Worker `cbmltdawebsite26` → Settings → Domains & Routes →
+  enable the `workers.dev` subdomain and Preview URLs. Without this a PR has no preview link
+  (the bot still says "Deployment successful", but it is a version with no traffic).
 - **R6 — Search Console**: search.google.com/search-console → add the domain property →
   submit `https://cbmltda.com.co/sitemap-index.xml`. Check "Pages not indexed" to decide on
   301 redirects for the old WordPress URLs.
