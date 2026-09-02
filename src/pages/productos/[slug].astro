@@ -170,6 +170,18 @@ const jsonLdMigas = {
         </div>
 
         {
+          producto.apoyo && (
+            <div class="mt-8 rounded-xl border border-gray-200 p-5">
+              <h2 class="font-semibold text-gray-900">Material de apoyo</h2>
+              <p class="mt-1 text-sm text-gray-600">{producto.apoyo.texto}</p>
+              <a href={producto.apoyo.href} class="mt-2 inline-block font-semibold text-acento-600 hover:underline">
+                {producto.apoyo.titulo} →
+              </a>
+            </div>
+          )
+        }
+
+        {
           producto.enlaces.length > 0 && (
             <div class="mt-8 text-sm text-gray-600">
               <h2 class="font-semibold text-gray-800">Más información</h2>

@@ -21,6 +21,7 @@ export interface Producto {
   enlaces: { label: string; url: string }[]; // external references (manufacturer, etc.)
   relacionados: string[]; // slugs of other products
   destacado?: boolean; // shown on the homepage
+  apoyo?: { titulo: string; texto: string; href: string }; // internal page with the manual and training videos
 }
 
 export const productos: Producto[] = [
@@ -48,6 +49,11 @@ export const productos: Producto[] = [
       { label: "Prueba ECB de máquinas operadas por personal (PDF)", url: "https://www.ecb.europa.eu/euro/cashprof/cashhand/generatedPdfs/Staff_Operated_Machines_2019-07-05.en.pdf" },
     ],
     relacionados: [],
+    apoyo: {
+      titulo: "Capacitación TBM EP100",
+      texto: "Manual de usuario y siete videos paso a paso para operar el equipo.",
+      href: "/capacitacion-tbm/",
+    },
   },
   {
     slug: "zunchadora-portatil-transpak-h46",
