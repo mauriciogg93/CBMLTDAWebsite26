@@ -9,14 +9,14 @@
     "directory": "./dist",
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "404-page"
-  }
-  // Custom domain: declarative, nothing in the dashboard. Uncomment once WordPress is to be
-  // switched off and the cbmltda.com.co zone already lives in Cloudflare
-  // (`dig NS cbmltda.com.co` must show *.ns.cloudflare.com). On the next deploy Cloudflare
-  // creates the DNS records and the certificate for both hostnames. Hostnames only: no
-  // scheme, no path.
-  // "routes": [
-  //   { "pattern": "cbmltda.com.co", "custom_domain": true },
-  //   { "pattern": "www.cbmltda.com.co", "custom_domain": true }
-  // ]
+  },
+  // Custom domain: declarative, nothing in the dashboard. The cbmltda.com.co zone lives in
+  // Cloudflare (`dig NS cbmltda.com.co` shows *.ns.cloudflare.com); on each deploy Cloudflare
+  // keeps the DNS records and the certificate for both hostnames. Hostnames only: no scheme,
+  // no path. To roll back to another origin: comment this block out, push, and recreate the
+  // A record in the zone's DNS panel.
+  "routes": [
+    { "pattern": "cbmltda.com.co", "custom_domain": true },
+    { "pattern": "www.cbmltda.com.co", "custom_domain": true }
+  ]
 }

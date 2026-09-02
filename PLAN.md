@@ -80,8 +80,8 @@ Legend: `[x]` done · `[ ]` pending · 🤖 the assistant does it · 🧑 only t
 - [ ] 🤝 Review the site on workers.dev and decide when to switch WordPress off
 - [x] 🧑 R2: move the DNS of cbmltda.com.co to Cloudflare (2026-09-02: nameservers are
       `nina`/`rajeev.ns.cloudflare.com`; Zoho MX + SPF imported; A record still WordPress)
-- [ ] 🤖 Enable the `routes` block of `wrangler.jsonc` and push: that deploy creates the DNS
-      records and the certificate for `cbmltda.com.co` and `www.cbmltda.com.co`
+- [x] 🤖 Enable the `routes` block of `wrangler.jsonc` and push: that deploy creates the DNS
+      records and the certificate for `cbmltda.com.co` and `www.cbmltda.com.co` (2026-09-02)
 - [ ] 🧑 R3: zone settings after the first deploy with the domain (Always Use HTTPS, www → root)
 - [ ] 🧑 R4: switch off the scripts the zone injects (JavaScript Detections, Web Analytics)
 - [ ] 🤖 `npm run verify` all green with zero warnings; Lighthouse
