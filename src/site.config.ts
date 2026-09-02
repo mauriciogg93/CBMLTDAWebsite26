@@ -9,8 +9,8 @@ export const SITE = {
   // Homepage meta description and JSON-LD description. 160 characters max: search
   // results cut it and the postbuild (scripts/check-links.mjs) fails above that.
   descripcion:
-    'Contadoras de billetes y monedas, detectores de billetes, zunchadoras e insumos de embalaje con servicio técnico propio. Desde 1983 en Medellín, Colombia.',
-  fundacion: 1983,
+    'Contadoras de billetes y monedas, detectores de billetes, zunchadoras e insumos de embalaje con servicio técnico propio. Desde 1995 en Medellín, Colombia.',
+  fundacion: 1995,
   ciudad: 'Medellín',
   pais: 'Colombia',
   direccion: 'Diagonal 74B (Av. Bolivariana) # 32 - 117',
