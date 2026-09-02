@@ -82,13 +82,15 @@ Legend: `[x]` done · `[ ]` pending · 🤖 the assistant does it · 🧑 only t
       `nina`/`rajeev.ns.cloudflare.com`; Zoho MX + SPF imported; A record still WordPress)
 - [ ] 🤖 Enable the `routes` block of `wrangler.jsonc` and push: that deploy creates the DNS
       records and the certificate for `cbmltda.com.co` and `www.cbmltda.com.co`
-      (2026-09-02: pushed in c4a859c, the Workers Build failed at the deploy step; WordPress
-      still serves the domain. Suspect: `www` has a CNAME record, which Cloudflare forbids
-      under a Custom Domain. Waiting for the build log)
+      (2026-09-02: the first build failed with API error 100117, the apex `A` and the `www`
+      `CNAME` imported from DigitalOcean block the Custom Domain and wrangler cannot override
+      them. Pending: the developer deletes both records in DNS → Records and retries the
+      build. That deploy also turned workers.dev off; `workers_dev: true` is now declared)
 - [ ] 🧑 R3: zone settings after the first deploy with the domain (Always Use HTTPS, www → root)
 - [ ] 🧑 R4: switch off the scripts the zone injects (JavaScript Detections, Web Analytics)
 - [ ] 🤖 `npm run verify` all green with zero warnings; Lighthouse
-- [ ] 🧑 R5 (optional): Preview URLs so PRs get a preview link
+- [x] 🤖 R5: Preview URLs, declared in `wrangler.jsonc` (2026-09-02; live with the next
+      successful deploy)
 - [ ] 🧑 R6: Google Search Console with the new sitemap
 - [ ] 🧑 R8: handover to the owner in operation mode (CBM's computer ready, assistant tested
       end to end, developer's contact in GUIA-PARA-CBM.md)
@@ -126,7 +128,10 @@ Legend: `[x]` done · `[ ]` pending · 🤖 the assistant does it · 🧑 only t
   domain registrar, change the nameservers from DigitalOcean to the two `*.ns.cloudflare.com`
   it shows → wait for activation (Cloudflare email; `dig NS cbmltda.com.co`). WordPress keeps
   serving meanwhile. Report back: the assistant enables `routes` and pushes when the order to
-  switch WordPress off is given.
+  switch WordPress off is given. **Right before that push**: DNS → Records → delete the `A`
+  of the apex and the `CNAME` of `www` (the Custom Domain API refuses hostnames that already
+  have records, error 100117, and wrangler cannot override them); MX and TXT stay. The
+  domain is down for the minute the build takes.
 - **R3 — Zone: HTTPS and www** (after the first deploy with the domain, two minutes):
   SSL/TLS → Edge Certificates → **Always Use HTTPS** on. Rules → **Overview** (not Rules →
   Settings, that tab is Bulk Redirects) → Create rule → Redirect Rule → template *"Redirect
@@ -137,9 +142,9 @@ Legend: `[x]` done · `[ ]` pending · 🤖 the assistant does it · 🧑 only t
   Fight Mode if unwanted); Analytics & Logs → **Web Analytics** → disable, or keep it
   (cookie-free) and say so. The assistant re-runs `verify` (script count) and Lighthouse.
   Traffic numbers stay available without any script in the zone's HTTP analytics.
-- **R5 — Preview URLs (optional)**: Worker `cbmltdawebsite26` → Settings → Domains & Routes →
-  enable the `workers.dev` subdomain and Preview URLs. Without this a PR has no preview link
-  (the bot still says "Deployment successful", but it is a version with no traffic).
+- **R5 — Preview URLs**: nothing to do in the dashboard. `workers_dev` and `preview_urls`
+  are declared in `wrangler.jsonc` (wrangler resets those toggles on every deploy, so a
+  dashboard change would not survive). A PR gets its preview link once its build runs.
 - **R6 — Search Console**: search.google.com/search-console → add the domain property →
   submit `https://cbmltda.com.co/sitemap-index.xml`. Check "Pages not indexed" to decide on
   301 redirects for the old WordPress URLs.

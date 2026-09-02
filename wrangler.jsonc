@@ -10,6 +10,11 @@
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "404-page"
   },
+  // workers.dev stays on next to the custom domain (verification URL; canonical tags point
+  // at the domain) and every branch build gets a Preview URL. Without these two keys a
+  // `routes` block silently switches workers.dev off on deploy.
+  "workers_dev": true,
+  "preview_urls": true,
   // Custom domain: declarative, nothing in the dashboard. The cbmltda.com.co zone lives in
   // Cloudflare (`dig NS cbmltda.com.co` shows *.ns.cloudflare.com); on each deploy Cloudflare
   // keeps the DNS records and the certificate for both hostnames. Hostnames only: no scheme,

@@ -62,7 +62,7 @@ scripts/                  check-links.mjs (postbuild), verify-deploy.sh (npm run
                           resize used in operation mode, via Astro's sharp), doctor.mjs (npm run
                           doctor: tools, repo, access and configuration of the machine; pushes
                           nothing). Zero dependencies.
-wrangler.jsonc            the whole deploy config; the domain's `routes` block is commented out
+wrangler.jsonc            the whole deploy config: assets, the domain's `routes`, workers.dev, previews
 .node-version             Node 24: Workers Builds uses the same major as the local machine
 asistente.command         double click opens Antigravity CLI with automatic approval and a first message
                           that makes it read AGENTS.md (macOS); asistente.cmd is the Windows counterpart
@@ -89,7 +89,8 @@ There is no `.github/workflows/`: the CI/CD is Cloudflare Workers Builds (see §
 - **New page**: create it in `src/pages/` with `BaseLayout` (+ `Seccion` for the body);
   `descripcion` ≤ 160 characters; add it to `nav` in `site.config.ts` only if asked.
 - **Domain change**: `url` in `site.config.ts` + the `routes` block of `wrangler.jsonc`
-  (hostnames only, `custom_domain: true`, the zone must already exist in Cloudflare) + push.
+  (hostnames only, `custom_domain: true`, the zone must already exist in Cloudflare and the
+  hostnames must have no `A`/`CNAME` records left: API error 100117 otherwise) + push.
   Cloudflare creates the DNS records and the certificate. Then the zone settings of the
   PLAN.md runbook.
 - **Tagline, colors or hero photo change**: `npm run brand` and commit `public/og.jpg` and
@@ -133,6 +134,12 @@ There is no `.github/workflows/`: the CI/CD is Cloudflare Workers Builds (see §
 - **Cloudflare injects `<script>` into every HTML** when the zone has *JavaScript
   Detections* (Bot Fight Mode) or *Web Analytics* on: it lowers Lighthouse Best Practices
   and contradicts "no trackers". `npm run verify` compares the script count with `dist/`.
+- **Custom Domains refuse hostnames that already have DNS records** (API error 100117,
+  "already has externally managed DNS records"): wrangler's non-interactive override does
+  not apply. Delete the `A` of the apex and the `CNAME` of `www` in the zone right before
+  the deploy that enables `routes`; MX and TXT stay. Also, a `routes` block switches
+  `workers.dev` off unless `workers_dev: true` is declared: the first domain deploy
+  (2026-09-02) left the site with no public URL at all until the records were cleaned.
 - **Lighthouse from the terminal**, mobile, against the published URL:
   `npx lighthouse <url> --output=json --output-path=./lh.json --chrome-flags="--headless=new"`
   then read `categories.*.score` and every audit with `score < 1`.
