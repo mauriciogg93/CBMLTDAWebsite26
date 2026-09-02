@@ -68,7 +68,7 @@ owner that this change needs the developer and has been noted.
 | Client logos | `src/data/clients.ts` + `src/assets/clients/` | PNG or SVG logo, transparent background if possible |
 | Image catalogs | `src/data/catalogs.ts` + `src/assets/catalogos/` | One image per page, in reading order. If a PDF arrives, one JPG per page is needed; if you cannot convert it, note it for the developer |
 | Homepage: hero, lines of business, services, featured products, about, solutions, clients, closing | `src/pages/index.astro` | Texts between tags and in the `servicios` / `soluciones` arrays. Moving, adding or removing blocks: §1.4 |
-| Contact page, support videos, privacy policy, catalogs page, not-found page | `src/pages/contactenos.astro`, `material-apoyo.astro` (`videos` array: `{ id, titulo }`), `politica-de-datos.astro`, `catalogos.astro`, `404.astro` | Texts, and §1.4 for the structure |
+| Contact page, support videos, TBM EP100 training, privacy policy, catalogs page, not-found page | `src/pages/contactenos.astro`, `material-apoyo.astro` (`videos` array: `{ id, titulo }`), `capacitacion-tbm.astro` (same `videos` shape, in viewing order; its PDF manual in `public/manuales/`), `politica-de-datos.astro`, `catalogos.astro`, `404.astro` | Texts, and §1.4 for the structure |
 | Catalog page and the product page | `src/pages/productos/index.astro`, `src/pages/productos/[slug].astro` | Texts, and §1.4 for the structure. `[slug].astro` is shared by all products: change it only when the owner wants the change on every product page |
 
 All site copy stays in Spanish. Photos and images: copy them to the matching folder with a

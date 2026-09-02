@@ -22,6 +22,9 @@ Legend: `[x]` done · `[ ]` pending · 🤖 the assistant does it · 🧑 only t
 - [x] 🤖 6 categories, 9 client logos, 2 image catalogs (17 scanned pages)
 - [x] 🤖 Contact data: address, landline, mobile/WhatsApp, email
 - [x] 🤖 Support-material page (2 YouTube how-to videos)
+- [x] 🤖 TBM EP100 training page (`/capacitacion-tbm/`, 2026-09-02): the user manual (PDF
+      v2.1, 36 pages) and the 7 training videos of the WordPress page that used to be
+      password-protected; same URL, linked from `/material-apoyo/` and the product page
 - [x] 🤖 Link-preview image (`og.jpg`) and home-screen icon, generated from the tokens and the
       TBM EP100 photo (`npm run brand`)
 - [x] 🤖 Review of the migrated copy: accents (más, pérdidas, catálogo, Semiautomática), raw
@@ -36,7 +39,6 @@ Legend: `[x]` done · `[ ]` pending · 🤖 the assistant does it · 🧑 only t
 | `[PENDIENTE: revisión del texto legal…]` | `/politica-de-datos/` | CBM (or their lawyer) reviews the base text of the privacy policy |
 | WhatsApp of the CTA | Every green button | Confirm that 312 296 2040 receives customer WhatsApp messages |
 | Empty `web3formsKey` | `/contactenos/` (hidden form) | Decide whether to enable the form (runbook R7) |
-| Password-protected page "Material Apoyo TBM EP100" | Not migrated | It was password-protected in WordPress; decide whether it is needed and with what content |
 
 ## 3. Page-by-page review
 
@@ -186,6 +188,7 @@ pending.
 | 301 redirects for old URLs? | Wait for Search Console data; the Worker can add them if needed |
 | Show prices or availability on product pages? | Pending on CBM; omitted on purpose today |
 | YouTube embeds | The iframe (youtube-nocookie) sets a cookie and lowers Best Practices to 96 on product pages with a video. A facade (thumbnail + click) avoids it but needs a small script, and today the only JS is the menu |
+| Index the TBM EP100 training page? | WordPress served it `noindex` because it was password-protected. Migrated on 2026-09-02 as a normal indexed page (sitemap included): the videos are public on YouTube and the manual helps buyers. To hide it from search engines, add a `noindex` meta to that page |
 | Opening hours, social networks, testimonials and figures | Decided on 2026-09-01: not published. The site promises no schedule ("un asesor le responde en horario laboral"), the JSON-LD carries no `openingHours` or `sameAs`, and the social proof is the client logos. Do not ask for them again |
 
 ## Iteration log
@@ -270,3 +273,10 @@ pending.
   port 4321. AGENTS.md asks for its output in the developer note when a tool, an access or the
   publishing fails; R8 runs it on the owner's computer. Tested on macOS only; the Windows and
   Linux branches are part of the R8 end-to-end test.
+- **2026-09-02** — Import of the last WordPress page, "Material Apoyo TBM EP100"
+  (`/capacitacion-tbm/`), password-protected until CBM opened it: the user manual (PDF v2.1,
+  36 pages, 1.8 MB, now `public/manuales/tbm-ep100-manual-de-usuario-v2-1.pdf` with a
+  one-day cache rule) and the 7 training videos (all answer on YouTube's oEmbed). Same URL
+  as WordPress so the links CBM gave its customers keep working after the domain switch. The
+  page is linked from `/material-apoyo/` and from the TBM EP100 product page through a new
+  optional `apoyo` field of `Producto` (rendered by `[slug].astro` under the CTA box).
