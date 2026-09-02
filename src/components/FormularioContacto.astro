@@ -1,0 +1,87 @@
+---
+// Contact form via Web3Forms (https://web3forms.com — free plan).
+// NOT rendered while SITE.web3formsKey is empty: enabling it = pasting the key
+// into src/site.config.ts. Plain HTML submission, no JavaScript.
+import { SITE } from '../site.config';
+
+const activo = SITE.web3formsKey.length > 0;
+---
+
+{
+  activo && (
+    <form action="https://api.web3forms.com/submit" method="POST" class="space-y-4">
+      <input type="hidden" name="access_key" value={SITE.web3formsKey} />
+      <input type="hidden" name="subject" value={`Nuevo mensaje desde ${SITE.url}`} />
+      <input type="checkbox" name="botcheck" class="hidden" tabindex="-1" aria-hidden="true" />
+
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label for="nombre" class="block text-sm font-medium text-gray-700">
+            Nombre
+          </label>
+          <input
+            type="text"
+            id="nombre"
+            name="name"
+            required
+            autocomplete="name"
+            class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-marca-500"
+          />
+        </div>
+        <div>
+          <label for="correo" class="block text-sm font-medium text-gray-700">
+            Correo electrónico
+          </label>
+          <input
+            type="email"
+            id="correo"
+            name="email"
+            required
+            autocomplete="email"
+            class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-marca-500"
+          />
+        </div>
+      </div>
+      <div>
+        <label for="telefono" class="block text-sm font-medium text-gray-700">
+          Teléfono
+        </label>
+        <input
+          type="tel"
+          id="telefono"
+          name="phone"
+          autocomplete="tel"
+          class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-marca-500"
+        />
+      </div>
+      <div>
+        <label for="mensaje" class="block text-sm font-medium text-gray-700">
+          Solicitud
+        </label>
+        <textarea
+          id="mensaje"
+          name="message"
+          rows="5"
+          required
+          class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-marca-500"
+        />
+      </div>
+      <label class="flex items-start gap-2 text-sm text-gray-600">
+        <input type="checkbox" required class="mt-1" />
+        <span>
+          Autorizo el tratamiento de mis datos según la{' '}
+          <a href="/politica-de-datos/" class="text-marca-600 underline">
+            política de tratamiento de datos
+          </a>
+          .
+        </span>
+      </label>
+      <button
+        type="submit"
+        class="rounded-lg bg-marca-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-marca-700"
+      >
+        Enviar solicitud
+      </button>
+    </form>
+  )
+}

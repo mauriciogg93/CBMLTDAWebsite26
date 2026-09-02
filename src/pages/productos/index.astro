@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Seccion from '../../components/Seccion.astro';
+import TarjetaProducto from '../../components/TarjetaProducto.astro';
+import { categorias } from '../../data/categories';
+import { productosPorCategoria } from '../../data/products';
+
+// A product appears only under its main category so cards are not duplicated. Categories
+// without products are not listed (neither chip nor section): their anchor would not exist.
+const secciones = categorias
+  .map((cat) => ({
+    cat,
+    items: productosPorCategoria(cat.slug).filter((p) => p.categorias[0] === cat.slug),
+  }))
+  .filter(({ items }) => items.length > 0);
+---
+
+<BaseLayout
+  titulo="Catálogo de productos"
+  descripcion="Catálogo de CBM Ltda: contadoras de billetes y fajos, contadoras de monedas, detectores de billetes, zunchadoras, zuncho, grapadoras e insumos de embalaje."
+>
+  <Seccion
+    nivel="h1"
+    tono="gris"
+    antetitulo="Productos"
+    titulo="Catálogo de productos"
+    subtitulo="Equipos bancarios y para embalaje con importación directa, garantía y servicio técnico propio."
+  >
+    <nav aria-label="Categorías">
+      <ul class="flex flex-wrap gap-2">
+        {
+          secciones.map(({ cat }) => (
+            <li>
+              <a
+                href={`#${cat.slug}`}
+                class="inline-block rounded-full border border-marca-200 bg-white px-4 py-2 text-sm font-medium text-marca-700 transition-colors hover:bg-marca-50"
+              >
+                {cat.titulo}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </Seccion>
+
+  {
+    secciones.map(({ cat, items }) => (
+      <Seccion id={cat.slug} titulo={cat.titulo} subtitulo={cat.descripcion}>
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {items.map((p) => (
+            <TarjetaProducto producto={p} />
+          ))}
+        </div>
+      </Seccion>
+    ))
+  }
+</BaseLayout>

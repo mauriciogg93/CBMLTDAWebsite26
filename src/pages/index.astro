@@ -1,0 +1,261 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Seccion from '../components/Seccion.astro';
+import TarjetaProducto from '../components/TarjetaProducto.astro';
+import BotonWhatsApp from '../components/BotonWhatsApp.astro';
+import { SITE } from '../site.config';
+import { productos } from '../data/products';
+import { clientes } from '../data/clients';
+import { imagenCliente, imagenProducto } from '../lib/images';
+
+const heroImagen = imagenProducto('TBM_24.png');
+const destacados = productos.filter((p) => p.destacado);
+const aniosExperiencia = new Date().getFullYear() - SITE.fundacion;
+
+const servicios = [
+  {
+    icono: 'lucide:wrench',
+    titulo: 'Mantenimiento',
+    texto:
+      'Mantenimiento preventivo para que sus equipos de conteo y embalaje trabajen siempre a punto.',
+  },
+  {
+    icono: 'lucide:hammer',
+    titulo: 'Reparación',
+    texto:
+      'Servicio técnico propio y repuestos originales: somos importadores directos de las marcas que vendemos.',
+  },
+  {
+    icono: 'lucide:sliders-horizontal',
+    titulo: 'Soluciones a su medida',
+    texto:
+      'Lo asesoramos para elegir el equipo correcto según el volumen y las necesidades de su operación.',
+  },
+];
+
+const soluciones = [
+  {
+    titulo: 'Contadoras de monedas',
+    texto:
+      'Contadoras multifunciones de fácil operación con velocidad extra rápida y conteo de alta precisión.',
+    href: '/productos/#contadoras-de-monedas',
+  },
+  {
+    titulo: 'Contadoras de fajos de billetes',
+    texto:
+      'Conteos rápidos y correctos para fajos de billetes nuevos y usados, cheques, vouchers y cupones con exactitud del 100%.',
+    href: '/productos/#contadoras-de-billetes',
+  },
+  {
+    titulo: 'Contadoras de billetes',
+    texto:
+      'Estilizadas y compactas, para contar billetes sueltos con precisión, reduciendo tiempo de trabajo y pérdidas debidas a errores humanos.',
+    href: '/productos/#contadoras-de-billetes',
+  },
+  {
+    titulo: 'Zunchadoras',
+    texto:
+      'Para tensionar, termosellar y cortar en una sola operación; diferentes modelos con zunchos de poliéster o de polipropileno.',
+    href: '/productos/#zunchadoras',
+  },
+];
+---
+
+<BaseLayout
+  tituloCompleto={`${SITE.nombre} — ${SITE.tagline} | ${SITE.ciudad}`}
+  titulo="Inicio"
+  descripcion={SITE.descripcion}
+>
+  <!-- Hero: what CBM does (business H1) + WhatsApp CTA; the TBM EP100 as the flagship product -->
+  <section class="bg-marca-900 text-white">
+    <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 md:grid-cols-2 md:py-20">
+      <div>
+        <p class="text-sm font-semibold tracking-widest text-marca-200 uppercase">
+          {SITE.tagline} · desde {SITE.fundacion}
+        </p>
+        <h1 class="mt-3 text-4xl font-bold tracking-tight md:text-5xl">
+          Equipos bancarios y soluciones de embalaje con respaldo garantizado
+        </h1>
+        <p class="mt-4 text-xl text-gray-200">
+          Importación directa, garantía y servicio técnico propio en cada equipo.
+        </p>
+        <div class="mt-8">
+          <BotonWhatsApp etiqueta="Cotizar por WhatsApp" />
+        </div>
+      </div>
+      <!-- The whole product block (photo, caption, button) is one link to the product page,
+           like a TarjetaProducto card: the button alone was too far from the photo to read
+           as its link. -->
+      <a
+        href="/productos/tbm-ep100-contadora-de-billetes/"
+        class="group flex flex-col items-center text-center"
+      >
+        <Image
+          src={heroImagen}
+          alt="Contadora de billetes TBM EP100"
+          class="max-h-96 w-auto object-contain transition-transform group-hover:scale-105"
+          widths={[400, 800]}
+          sizes="(min-width: 768px) 480px, 90vw"
+          loading="eager"
+          fetchpriority="high"
+        />
+        <span class="mt-4 text-sm text-marca-200">
+          Nuestro producto insignia
+        </span>
+        <span
+          class="mt-4 inline-flex items-center rounded-lg bg-white px-5 py-3 font-semibold text-marca-700 shadow-sm transition-colors group-hover:bg-marca-50"
+        >
+          Ver la contadora TBM EP100
+        </span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Two lines of business -->
+  <Seccion tono="blanco">
+    <div class="grid gap-6 md:grid-cols-2">
+      <a
+        href="/productos/#contadoras-de-billetes"
+        class="group rounded-xl border border-gray-200 bg-gray-50 p-8 transition-shadow hover:shadow-md"
+      >
+        <h2 class="text-2xl font-bold text-gray-900 group-hover:text-marca-600">
+          Contadoras de billetes y monedas
+        </h2>
+        <p class="mt-3 text-gray-600">
+          Equipos bancarios para contar, recontar, clasificar y validar efectivo: billetes
+          sueltos, fajos y monedas.
+        </p>
+        <span class="mt-4 inline-block font-semibold text-acento-600 group-hover:underline">
+          Ver equipos →
+        </span>
+      </a>
+      <a
+        href="/productos/#zunchadoras"
+        class="group rounded-xl border border-gray-200 bg-gray-50 p-8 transition-shadow hover:shadow-md"
+      >
+        <h2 class="text-2xl font-bold text-gray-900 group-hover:text-marca-600">
+          Zunchadoras, zuncho e insumos para el embalaje
+        </h2>
+        <p class="mt-3 text-gray-600">
+          Máquinas y consumibles para asegurar embalajes: zunchadoras manuales y
+          semiautomáticas, zuncho, grapas y grapadoras.
+        </p>
+        <span class="mt-4 inline-block font-semibold text-acento-600 group-hover:underline">
+          Ver equipos →
+        </span>
+      </a>
+    </div>
+  </Seccion>
+
+  <!-- Services -->
+  <Seccion
+    tono="gris"
+    antetitulo="Servicio técnico propio"
+    titulo="Más que vender equipos, los respaldamos"
+  >
+    <div class="grid gap-8 md:grid-cols-3">
+      {
+        servicios.map((s) => (
+          <div class="rounded-xl bg-white p-6 shadow-sm">
+            <div class="flex h-14 w-14 items-center justify-center rounded-full bg-marca-50 text-marca-600">
+              <Icon name={s.icono} class="h-7 w-7" aria-hidden="true" />
+            </div>
+            <h3 class="mt-4 text-xl font-semibold text-gray-900">{s.titulo}</h3>
+            <p class="mt-2 text-gray-600">{s.texto}</p>
+          </div>
+        ))
+      }
+    </div>
+  </Seccion>
+
+  <!-- Featured products -->
+  <Seccion antetitulo="Catálogo" titulo="Productos destacados">
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {destacados.map((p) => <TarjetaProducto producto={p} />)}
+    </div>
+    <div class="mt-8">
+      <a href="/productos/" class="font-semibold text-marca-600 hover:underline">
+        Ver todo el catálogo de productos →
+      </a>
+    </div>
+  </Seccion>
+
+  <!-- About us -->
+  <Seccion
+    tono="oscuro"
+    id="quienes-somos"
+    antetitulo="CBM — experiencia que genera confianza"
+    titulo="¿Quiénes somos?"
+  >
+    <div class="grid items-center gap-10 md:grid-cols-3">
+      <p class="text-lg leading-relaxed text-gray-200 md:col-span-2">
+        Somos una empresa dedicada a la importación y comercialización de equipos bancarios y
+        para embalaje, como también a la prestación del servicio técnico para los mismos. Labor
+        que venimos desempeñando desde el año {SITE.fundacion}, lo que nos permite poseer una
+        amplia experiencia en este campo.
+      </p>
+      <div class="text-center">
+        <p class="text-6xl font-bold text-white">{aniosExperiencia}+</p>
+        <p class="mt-2 text-sm font-semibold tracking-widest text-marca-200 uppercase">
+          Años de experiencia
+        </p>
+        <Icon name="lucide:award" class="mx-auto mt-4 h-16 w-16 text-marca-200" aria-hidden="true" />
+      </div>
+    </div>
+  </Seccion>
+
+  <!-- Solutions by equipment type -->
+  <Seccion titulo="Creamos soluciones específicas para tu negocio">
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        soluciones.map((s) => (
+          <a
+            href={s.href}
+            class="group rounded-xl border border-gray-200 p-6 transition-shadow hover:shadow-md"
+          >
+            <h3 class="font-semibold text-gray-900 group-hover:text-marca-600">{s.titulo}</h3>
+            <p class="mt-2 text-sm text-gray-600">{s.texto}</p>
+          </a>
+        ))
+      }
+    </div>
+  </Seccion>
+
+  <!-- Clients -->
+  <Seccion tono="gris" antetitulo="Confianza" titulo="Algunos de nuestros clientes">
+    <ul class="grid grid-cols-3 items-center gap-6 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-9">
+      {
+        clientes.map((c) => (
+          <li class="flex h-20 items-center justify-center rounded-lg bg-white p-3 shadow-sm">
+            <Image
+              src={imagenCliente(c.logo)}
+              alt={`Logo de ${c.nombre}`}
+              class="max-h-14 w-auto object-contain"
+              widths={[160]}
+              sizes="120px"
+            />
+          </li>
+        ))
+      }
+    </ul>
+  </Seccion>
+
+  <!-- Closing CTA -->
+  <Seccion
+    tono="oscuro"
+    titulo="¿Necesita asesoría para elegir su equipo?"
+    subtitulo="Escríbanos por WhatsApp y un asesor lo acompaña en la selección, la compra y el servicio posventa."
+  >
+    <div class="flex flex-wrap gap-4">
+      <BotonWhatsApp variante="contraste" etiqueta="Escribir por WhatsApp" />
+      <a
+        href="/contactenos/"
+        class="inline-flex items-center rounded-lg border border-white/40 px-5 py-3 font-semibold text-white transition-colors hover:bg-white/10"
+      >
+        Otros medios de contacto
+      </a>
+    </div>
+  </Seccion>
+</BaseLayout>

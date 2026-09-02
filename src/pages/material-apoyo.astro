@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Seccion from '../components/Seccion.astro';
+import VideoYouTube from '../components/VideoYouTube.astro';
+
+// How-to videos published by CBM. Adding one = add an object.
+const videos = [
+  {
+    id: 'qJAQaLPnsMo',
+    titulo: 'Instructivo Contadora de Monedas | CBM LTDA | CS2000 – TC220H',
+  },
+  {
+    id: 'AqG4AzkgyFA',
+    titulo: 'Instructivo Recontadora de Fajos | CBM LTDA | TW880 – TW600L',
+  },
+];
+---
+
+<BaseLayout
+  titulo="Material de apoyo"
+  descripcion="Videos instructivos de CBM Ltda para el uso de contadoras de monedas y recontadoras de fajos."
+>
+  <Seccion
+    nivel="h1"
+    antetitulo="Soporte"
+    titulo="Material de apoyo"
+    subtitulo="Instructivos en video para sacar el máximo provecho de sus equipos."
+  >
+    <div class="grid gap-10 md:grid-cols-2">
+      {
+        videos.map((v) => (
+          <div>
+            <h2 class="mb-3 text-lg font-semibold text-gray-900">{v.titulo}</h2>
+            <VideoYouTube id={v.id} titulo={v.titulo} />
+          </div>
+        ))
+      }
+    </div>
+  </Seccion>
+</BaseLayout>

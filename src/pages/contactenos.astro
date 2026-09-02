@@ -1,0 +1,96 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Seccion from '../components/Seccion.astro';
+import BotonWhatsApp from '../components/BotonWhatsApp.astro';
+import FormularioContacto from '../components/FormularioContacto.astro';
+import { SITE, whatsappUrl } from '../site.config';
+
+const canales = [
+  {
+    titulo: 'WhatsApp',
+    valor: SITE.celular,
+    href: whatsappUrl(),
+    externo: true,
+  },
+  { titulo: 'Teléfono fijo', valor: SITE.telefono, href: `tel:${SITE.telefonoE164}` },
+  { titulo: 'Correo', valor: SITE.email, href: `mailto:${SITE.email}` },
+];
+---
+
+<BaseLayout
+  titulo="Contáctenos"
+  descripcion={`Contacte a CBM Ltda en ${SITE.ciudad}: WhatsApp ${SITE.celular}, teléfono ${SITE.telefono} o correo ${SITE.email}. Asesoría y servicio técnico.`}
+>
+  <Seccion
+    nivel="h1"
+    tono="gris"
+    antetitulo="Hablemos"
+    titulo="Contáctenos"
+    subtitulo="La vía más rápida es WhatsApp: un asesor le responde en horario laboral."
+  >
+    <BotonWhatsApp etiqueta="Escribir por WhatsApp" />
+  </Seccion>
+
+  <Seccion>
+    <div class="grid gap-10 md:grid-cols-2">
+      <div>
+        <h2 class="text-2xl font-bold text-gray-900">Medios de contacto</h2>
+        <ul class="mt-6 space-y-4">
+          {
+            canales.map((c) => (
+              <li class="rounded-xl border border-gray-200 p-5">
+                <p class="text-sm font-semibold tracking-wide text-gray-500 uppercase">
+                  {c.titulo}
+                </p>
+                <a
+                  href={c.href}
+                  rel={c.externo ? 'noopener' : undefined}
+                  target={c.externo ? '_blank' : undefined}
+                  class="mt-1 block text-lg font-semibold text-marca-600 hover:underline"
+                >
+                  {c.valor}
+                  {c.externo && <span class="sr-only"> (abre en una pestaña nueva)</span>}
+                </a>
+              </li>
+            ))
+          }
+          <li class="rounded-xl border border-gray-200 p-5">
+            <p class="text-sm font-semibold tracking-wide text-gray-500 uppercase">Dirección</p>
+            <p class="mt-1 text-lg font-semibold text-gray-800">
+              {SITE.direccion}
+              <br />
+              {SITE.ciudad} – {SITE.pais}
+            </p>
+            <a
+              href={SITE.mapsUrl}
+              rel="noopener"
+              target="_blank"
+              class="mt-2 inline-block font-semibold text-acento-600 hover:underline"
+            >
+              Encuéntranos en el mapa →
+              <span class="sr-only"> (abre en una pestaña nueva)</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-gray-900">Escríbanos su solicitud</h2>
+        <div class="mt-6">
+          <FormularioContacto />
+          {
+            SITE.web3formsKey.length === 0 && (
+              <p class="rounded-xl bg-gray-50 p-5 text-gray-600">
+                También puede escribirnos directamente a{' '}
+                <a href={`mailto:${SITE.email}`} class="font-semibold text-marca-600 hover:underline">
+                  {SITE.email}
+                </a>{' '}
+                con los datos de su empresa y el equipo que le interesa.
+              </p>
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </Seccion>
+</BaseLayout>

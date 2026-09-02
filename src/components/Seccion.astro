@@ -1,0 +1,57 @@
+---
+interface Props {
+  id?: string;
+  antetitulo?: string;
+  titulo?: string;
+  subtitulo?: string;
+  tono?: 'blanco' | 'gris' | 'oscuro';
+  /** Heading level of the title (h2 by default). */
+  nivel?: 'h1' | 'h2';
+}
+
+const { id, antetitulo, titulo, subtitulo, tono = 'blanco', nivel = 'h2' } = Astro.props;
+const Encabezado = nivel;
+
+const fondos = {
+  blanco: 'bg-white',
+  gris: 'bg-gray-50',
+  oscuro: 'bg-marca-900 text-white',
+};
+---
+
+<section id={id} class:list={[fondos[tono], 'scroll-mt-20 py-14 md:py-20']}>
+  <div class="mx-auto max-w-6xl px-4">
+    {
+      (antetitulo || titulo || subtitulo) && (
+        <div class="mb-10 max-w-3xl">
+          {antetitulo && (
+            <p
+              class:list={[
+                'text-sm font-semibold tracking-widest uppercase',
+                tono === 'oscuro' ? 'text-marca-200' : 'text-acento-600',
+              ]}
+            >
+              {antetitulo}
+            </p>
+          )}
+          {titulo && (
+            <Encabezado
+              class:list={[
+                'mt-2 text-3xl font-bold tracking-tight md:text-4xl',
+                tono === 'oscuro' ? 'text-white' : 'text-gray-900',
+              ]}
+            >
+              {titulo}
+            </Encabezado>
+          )}
+          {subtitulo && (
+            <p class:list={['mt-4 text-lg', tono === 'oscuro' ? 'text-gray-200' : 'text-gray-600']}>
+              {subtitulo}
+            </p>
+          )}
+        </div>
+      )
+    }
+    <slot />
+  </div>
+</section>

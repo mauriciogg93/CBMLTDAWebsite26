@@ -1,0 +1,37 @@
+---
+import { Image } from 'astro:assets';
+import type { Producto } from '../data/products';
+import { imagenProducto } from '../lib/images';
+
+interface Props {
+  producto: Producto;
+  /** Image loading priority (for cards above the fold). */
+  eager?: boolean;
+}
+
+const { producto, eager = false } = Astro.props;
+const portada = imagenProducto(producto.imagenes[0]!);
+---
+
+<a
+  href={`/productos/${producto.slug}/`}
+  class="group flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md"
+>
+  <div class="flex aspect-square items-center justify-center bg-white p-6">
+    <Image
+      src={portada}
+      alt={producto.titulo}
+      class="max-h-full w-auto object-contain transition-transform group-hover:scale-105"
+      widths={[320, 640]}
+      sizes="(min-width: 768px) 280px, 90vw"
+      loading={eager ? 'eager' : 'lazy'}
+    />
+  </div>
+  <div class="flex flex-1 flex-col border-t border-gray-100 p-5">
+    <h3 class="font-semibold text-gray-900 group-hover:text-marca-600">{producto.titulo}</h3>
+    <p class="mt-2 line-clamp-3 flex-1 text-sm text-gray-600">{producto.corto}</p>
+    <span class="mt-3 text-sm font-semibold text-acento-600 group-hover:underline">
+      Ver producto →
+    </span>
+  </div>
+</a>

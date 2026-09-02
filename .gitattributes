@@ -1,0 +1,4 @@
+# Normalize line endings: LF in the repo and on checkout (scripts and Node need LF),
+# except the Windows launcher, which cmd.exe reads best with CRLF.
+* text=auto eol=lf
+*.cmd text eol=crlf

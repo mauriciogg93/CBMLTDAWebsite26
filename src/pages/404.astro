@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../site.config';
+---
+
+<BaseLayout
+  titulo="Página no encontrada"
+  descripcion={`La página que busca no existe en el sitio de ${SITE.nombre}.`}
+>
+  <section class="mx-auto max-w-3xl px-4 py-24 text-center">
+    <p class="text-sm font-semibold tracking-widest text-acento-600 uppercase">Error 404</p>
+    <h1 class="mt-3 text-4xl font-bold text-gray-900">Página no encontrada</h1>
+    <p class="mt-4 text-lg text-gray-600">
+      La dirección que escribió no existe o cambió de lugar. Pruebe desde el inicio o revise
+      nuestro catálogo.
+    </p>
+    <div class="mt-8 flex flex-wrap justify-center gap-4">
+      <a
+        href="/"
+        class="rounded-lg bg-marca-600 px-5 py-3 font-semibold text-white transition-colors hover:bg-marca-700"
+      >
+        Ir al inicio
+      </a>
+      <a
+        href="/productos/"
+        class="rounded-lg border border-marca-300 px-5 py-3 font-semibold text-marca-700 transition-colors hover:bg-marca-50"
+      >
+        Ver productos
+      </a>
+    </div>
+  </section>
+</BaseLayout>

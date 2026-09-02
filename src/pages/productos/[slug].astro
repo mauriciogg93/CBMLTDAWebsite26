@@ -1,0 +1,224 @@
+---
+import { Image, getImage } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BotonWhatsApp from '../../components/BotonWhatsApp.astro';
+import TarjetaProducto from '../../components/TarjetaProducto.astro';
+import VideoYouTube from '../../components/VideoYouTube.astro';
+import { productos, productoPorSlug } from '../../data/products';
+import { categoriaPorSlug } from '../../data/categories';
+import { imagenProducto } from '../../lib/images';
+import { SITE } from '../../site.config';
+
+export function getStaticPaths() {
+  return productos.map((p) => ({ params: { slug: p.slug } }));
+}
+
+const { slug } = Astro.params;
+const producto = productoPorSlug(slug)!;
+const categoria = categoriaPorSlug(producto.categorias[0]!);
+const portada = imagenProducto(producto.imagenes[0]!);
+const galeria = producto.imagenes.slice(1);
+const relacionados = producto.relacionados
+  .map((s) => productoPorSlug(s))
+  .filter((p) => p !== undefined);
+
+// Link preview with the product photo (sales reps share product pages over WhatsApp).
+// JPG stays JPG (1200 px). PNG/GIF go to palette PNG at 800 px: converting them to JPG would
+// paint the transparent areas black, and a PNG without a palette weighs ~900 KB. WhatsApp
+// does not render WebP and recommends under 300 KB.
+const esJpg = portada.format === 'jpg' || portada.format === 'jpeg';
+const ogProducto = esJpg
+  ? await getImage({ src: portada, width: 1200, format: 'jpg' })
+  : await getImage({ src: portada, width: 800, format: 'png', quality: 80 });
+const anchoOg = Math.min(esJpg ? 1200 : 800, portada.width); // Astro never upscales
+const imagenOg = {
+  src: new URL(ogProducto.src, SITE.url).href,
+  ancho: anchoOg,
+  alto: Math.round((anchoOg * portada.height) / portada.width),
+};
+const urlFicha = new URL(`/productos/${producto.slug}/`, SITE.url).href;
+
+// Product brand for the JSON-LD, inferred from the title (the data has no brand field).
+const MARCAS = ['TBM', 'Transpak', 'AccuBanker', 'Chihua', 'TayChian', 'TransWorld'];
+const marca = MARCAS.find((m) => producto.titulo.toLowerCase().includes(m.toLowerCase()));
+
+const jsonLdProducto = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: producto.titulo,
+  description: producto.corto,
+  image: imagenOg.src,
+  url: urlFicha,
+  category: categoria.titulo,
+  ...(marca ? { brand: { '@type': 'Brand', name: marca } } : {}),
+};
+const jsonLdMigas = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: SITE.url + '/' },
+    { '@type': 'ListItem', position: 2, name: 'Productos', item: SITE.url + '/productos/' },
+    { '@type': 'ListItem', position: 3, name: categoria.titulo, item: `${SITE.url}/productos/#${categoria.slug}` },
+    { '@type': 'ListItem', position: 4, name: producto.titulo, item: urlFicha },
+  ],
+};
+---
+
+<BaseLayout
+  titulo={producto.titulo}
+  descripcion={producto.corto}
+  imagenOg={imagenOg}
+  jsonLdExtra={[jsonLdProducto, jsonLdMigas]}
+>
+  <div class="mx-auto max-w-6xl px-4 py-10 md:py-14">
+    <nav aria-label="Miga de pan" class="mb-8 text-sm text-gray-500">
+      <ol class="flex flex-wrap items-center gap-2">
+        <li><a href="/" class="hover:text-marca-600 hover:underline">Inicio</a></li>
+        <li aria-hidden="true">/</li>
+        <li>
+          <a href="/productos/" class="hover:text-marca-600 hover:underline">Productos</a>
+        </li>
+        <li aria-hidden="true">/</li>
+        <li>
+          <a href={`/productos/#${categoria.slug}`} class="hover:text-marca-600 hover:underline">
+            {categoria.titulo}
+          </a>
+        </li>
+        <li aria-hidden="true">/</li>
+        <li aria-current="page" class="font-medium text-gray-800">{producto.titulo}</li>
+      </ol>
+    </nav>
+
+    <div class="grid gap-10 lg:grid-cols-2">
+      <div>
+        <div class="flex aspect-[4/3] items-center justify-center rounded-xl border border-gray-200 bg-white p-8">
+          <Image
+            src={portada}
+            alt={producto.titulo}
+            class="max-h-full max-w-full object-contain"
+            widths={[480, 960]}
+            sizes="(min-width: 1024px) 520px, 90vw"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </div>
+        {
+          galeria.length > 0 && (
+            <ul class="mt-4 grid grid-cols-3 gap-4">
+              {galeria.map((img) => (
+                <li class="flex aspect-square items-center justify-center rounded-lg border border-gray-200 bg-white p-3">
+                  <Image
+                    src={imagenProducto(img)}
+                    alt={`${producto.titulo} — vista adicional`}
+                    class="max-h-full max-w-full object-contain"
+                    widths={[240, 480]}
+                    sizes="160px"
+                  />
+                </li>
+              ))}
+            </ul>
+          )
+        }
+      </div>
+
+      <div>
+        <p class="text-sm font-semibold tracking-widest text-acento-600 uppercase">
+          {categoria.titulo}
+        </p>
+        <h1 class="mt-2 text-3xl font-bold tracking-tight text-gray-900 md:text-4xl">
+          {producto.titulo}
+        </h1>
+
+        <div class="mt-6 space-y-4 text-gray-700">
+          {producto.descripcion.map((parrafo) => <p class="leading-relaxed wrap-anywhere">{parrafo}</p>)}
+        </div>
+
+        {
+          producto.caracteristicas.length > 0 && (
+            <div class="mt-8">
+              <h2 class="text-xl font-semibold text-gray-900">Características</h2>
+              <ul class="mt-3 space-y-2">
+                {producto.caracteristicas.map((c) => (
+                  <li class="flex gap-2 text-gray-700">
+                    <span aria-hidden="true" class="font-bold text-acento-600">
+                      ✓
+                    </span>
+                    <span>{c}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+
+        <div class="mt-8 rounded-xl bg-marca-50 p-6">
+          <h2 class="font-semibold text-marca-900">¿Le interesa este equipo?</h2>
+          <p class="mt-1 text-sm text-marca-800">
+            Cotice sin compromiso: le asesoramos sobre capacidad, garantía y repuestos.
+          </p>
+          <div class="mt-4 flex flex-wrap gap-3">
+            <BotonWhatsApp
+              mensaje={`Hola CBM, quiero cotizar: ${producto.titulo}. ¿Me pueden asesorar?`}
+            />
+            <a
+              href="/contactenos/"
+              class="inline-flex items-center rounded-lg border border-marca-300 px-5 py-3 font-semibold text-marca-700 transition-colors hover:bg-white"
+            >
+              Otros medios de contacto
+            </a>
+          </div>
+        </div>
+
+        {
+          producto.enlaces.length > 0 && (
+            <div class="mt-8 text-sm text-gray-600">
+              <h2 class="font-semibold text-gray-800">Más información</h2>
+              <ul class="mt-2 list-inside list-disc space-y-1">
+                {producto.enlaces.map((e) => (
+                  <li>
+                    {e.label}:{' '}
+                    <a
+                      href={e.url}
+                      rel="noopener nofollow"
+                      target="_blank"
+                      class="break-all text-marca-600 hover:underline"
+                    >
+                      {e.url}
+                      <span class="sr-only"> (abre en una pestaña nueva)</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+      </div>
+    </div>
+
+    {
+      producto.youtube.length > 0 && (
+        <section class="mt-14">
+          <h2 class="text-2xl font-bold text-gray-900">Video del producto</h2>
+          <div class="mt-4 grid gap-6 md:grid-cols-2">
+            {producto.youtube.map((id) => (
+              <VideoYouTube id={id} titulo={`Video: ${producto.titulo}`} />
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    {
+      relacionados.length > 0 && (
+        <section class="mt-14">
+          <h2 class="text-2xl font-bold text-gray-900">Productos relacionados</h2>
+          <div class="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {relacionados.map((p) => (
+              <TarjetaProducto producto={p} />
+            ))}
+          </div>
+        </section>
+      )
+    }
+  </div>
+</BaseLayout>

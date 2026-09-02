@@ -1,0 +1,68 @@
+---
+import '../styles/global.css';
+import { SITE, jsonLd } from '../site.config';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppFlotante from '../components/WhatsAppFlotante.astro';
+
+interface Props {
+  /** Page title (≤ 60 characters with the suffix; the postbuild warns above that). */
+  titulo: string;
+  /** Meta description (≤ 160 characters; the postbuild fails above that). */
+  descripcion: string;
+  /** Full <title>; defaults to "titulo — CBM Ltda". */
+  tituloCompleto?: string;
+  /** Link-preview image of THIS page (absolute URL); defaults to the generic brand one. */
+  imagenOg?: { src: string; ancho: number; alto: number };
+  /** JSON-LD blocks in addition to the business one (e.g. Product and BreadcrumbList on a product page). */
+  jsonLdExtra?: object[];
+}
+
+const { titulo, descripcion, tituloCompleto, imagenOg, jsonLdExtra = [] } = Astro.props;
+const tituloFinal = tituloCompleto ?? `${titulo} — ${SITE.nombre}`;
+const canonical = new URL(Astro.url.pathname, SITE.url).href;
+const og = imagenOg ?? { src: new URL(SITE.ogImage, SITE.url).href, ancho: 1200, alto: 630 };
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{tituloFinal}</title>
+    <meta name="description" content={descripcion} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <!-- Mobile browser bar color: --color-marca-600 from global.css -->
+    <meta name="theme-color" content="#2d3194" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.nombre} />
+    <meta property="og:title" content={tituloFinal} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="es_CO" />
+    <meta property="og:image" content={og.src} />
+    <meta property="og:image:width" content={String(og.ancho)} />
+    <meta property="og:image:height" content={String(og.alto)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd())} />
+    {jsonLdExtra.map((bloque) => <script is:inline type="application/ld+json" set:html={JSON.stringify(bloque)} />)}
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body class="bg-white font-sans text-gray-800 antialiased">
+    <a
+      href="#contenido"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded focus:bg-marca-600 focus:px-4 focus:py-2 focus:text-white"
+    >
+      Saltar al contenido
+    </a>
+    <Header />
+    <main id="contenido">
+      <slot />
+    </main>
+    <Footer />
+    <WhatsAppFlotante />
+  </body>
+</html>

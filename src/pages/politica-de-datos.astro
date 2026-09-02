@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Seccion from '../components/Seccion.astro';
+import { SITE } from '../site.config';
+---
+
+<BaseLayout
+  titulo="Política de tratamiento de datos"
+  descripcion={`Política de tratamiento de datos personales de ${SITE.nombreLegal}, conforme a la Ley 1581 de 2012 de Colombia.`}
+>
+  <Seccion nivel="h1" antetitulo="Legal" titulo="Política de tratamiento de datos personales">
+    <div class="prose-cbm max-w-3xl space-y-5 text-gray-700">
+      <p>
+        {SITE.nombreLegal}, con domicilio en {SITE.direccion}, {SITE.ciudad} – {SITE.pais}, en
+        cumplimiento de la Ley 1581 de 2012 y sus decretos reglamentarios, informa a sus
+        clientes, proveedores y visitantes cómo trata los datos personales que recolecta a
+        través de este sitio web y de sus canales de atención.
+      </p>
+
+      <h2 class="text-xl font-bold text-gray-900">Datos que recolectamos</h2>
+      <p>
+        Recolectamos los datos que usted nos entrega voluntariamente al contactarnos por
+        WhatsApp, teléfono, correo electrónico o el formulario de este sitio: nombre, correo,
+        teléfono y el contenido de su solicitud.
+      </p>
+
+      <h2 class="text-xl font-bold text-gray-900">Finalidad</h2>
+      <p>
+        Usamos esos datos únicamente para responder su solicitud, elaborar cotizaciones,
+        prestar servicio técnico y mantener la relación comercial. No vendemos ni compartimos
+        sus datos con terceros ajenos a estas finalidades.
+      </p>
+
+      <h2 class="text-xl font-bold text-gray-900">Sus derechos</h2>
+      <p>
+        Como titular usted puede conocer, actualizar, rectificar y solicitar la supresión de
+        sus datos personales, así como revocar la autorización otorgada. Para ejercer estos
+        derechos escríbanos a{' '}
+        <a href={`mailto:${SITE.email}`} class="font-semibold text-marca-600 hover:underline">
+          {SITE.email}
+        </a>{' '}
+        o comuníquese al {SITE.telefono}.
+      </p>
+
+      <h2 class="text-xl font-bold text-gray-900">Vigencia</h2>
+      <p>
+        Esta política rige desde su publicación en este sitio web. [PENDIENTE: revisión del
+        texto legal por parte de CBM Ltda]
+      </p>
+    </div>
+  </Seccion>
+</BaseLayout>

@@ -1,0 +1,24 @@
+# Dependencies and build output
+node_modules/
+dist/
+.astro/
+
+# Secrets — never enter the repo
+.env
+.env.production
+
+# Local wrangler state (`wrangler dev`, `wrangler deploy --dry-run`)
+.wrangler/
+
+# Logs
+npm-debug.log*
+
+# OS and editors
+.DS_Store
+.idea/
+
+# Local working folder (quotes), not part of the site
+cotizaciones/
+
+# Screenshots of the visual check (npm run shots), also used in operation mode
+capturas/

@@ -1,0 +1,100 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import { SITE } from '../site.config';
+import logoAzul from '../assets/brand/logo-cbm-azul.png';
+
+const rutaActual = Astro.url.pathname;
+
+function esActual(href: string): boolean {
+  if (href === '/') return rutaActual === '/';
+  return rutaActual.startsWith(href);
+}
+---
+
+<header class="sticky top-0 z-40 border-b border-gray-200 bg-white/95 backdrop-blur">
+  <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
+    <a href="/" class="flex items-center gap-2" aria-label={`${SITE.nombre} — inicio`}>
+      <Image src={logoAzul} alt={`Logo de ${SITE.nombre}`} class="h-10 w-auto" widths={[160, 320]} sizes="160px" loading="eager" />
+    </a>
+
+    <nav aria-label="Navegación principal">
+      <button
+        id="boton-menu"
+        type="button"
+        class="rounded p-2 text-marca-600 md:hidden"
+        aria-expanded="false"
+        aria-controls="menu-movil"
+      >
+        <span class="sr-only">Abrir menú</span>
+        <Icon name="lucide:menu" class="h-6 w-6" aria-hidden="true" />
+      </button>
+
+      <ul class="hidden items-center gap-1 md:flex">
+        {
+          SITE.nav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                aria-current={esActual(item.href) ? 'page' : undefined}
+                class:list={[
+                  'rounded px-3 py-2 text-sm font-medium transition-colors',
+                  esActual(item.href)
+                    ? 'bg-marca-50 text-marca-700'
+                    : 'text-gray-700 hover:bg-gray-100 hover:text-marca-600',
+                ]}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+
+  <div id="menu-movil" hidden class="border-t border-gray-200 md:hidden">
+    <ul class="space-y-1 px-4 py-3">
+      {
+        SITE.nav.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              aria-current={esActual(item.href) ? 'page' : undefined}
+              class:list={[
+                'block rounded px-3 py-2 font-medium',
+                esActual(item.href) ? 'bg-marca-50 text-marca-700' : 'text-gray-700 hover:bg-gray-100',
+              ]}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</header>
+
+<script>
+  // The only JS on the site: mobile menu (open/close, Escape closes).
+  const boton = document.getElementById('boton-menu')!;
+  const menu = document.getElementById('menu-movil')!;
+
+  function cerrar() {
+    menu.hidden = true;
+    boton.setAttribute('aria-expanded', 'false');
+  }
+
+  boton.addEventListener('click', () => {
+    const abierto = !menu.hidden;
+    menu.hidden = abierto;
+    boton.setAttribute('aria-expanded', String(!abierto));
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !menu.hidden) {
+      cerrar();
+      boton.focus();
+    }
+  });
+</script>

@@ -1,0 +1,18 @@
+---
+// Lazy-loaded YouTube embed (nocookie domain, no JS of our own).
+interface Props {
+  id: string;
+  titulo: string;
+}
+
+const { id, titulo } = Astro.props;
+---
+
+<iframe
+  src={`https://www.youtube-nocookie.com/embed/${id}`}
+  title={titulo}
+  loading="lazy"
+  allowfullscreen
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  class="aspect-video w-full rounded-xl border border-gray-200 bg-gray-100"
+></iframe>

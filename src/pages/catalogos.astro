@@ -1,0 +1,60 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Seccion from '../components/Seccion.astro';
+import BotonWhatsApp from '../components/BotonWhatsApp.astro';
+import { catalogos } from '../data/catalogs';
+import { imagenCatalogo } from '../lib/images';
+---
+
+<BaseLayout
+  titulo="Catálogos"
+  descripcion="Catálogos de CBM Ltda en imágenes: portafolio de manejo de dinero (contadoras y detectores de billetes) y de embalaje (zunchadoras, zuncho e insumos)."
+>
+  <Seccion
+    nivel="h1"
+    tono="gris"
+    antetitulo="Portafolio"
+    titulo="Catálogos"
+    subtitulo="Hojee nuestros catálogos página por página. Para cotizar cualquier referencia, escríbanos por WhatsApp."
+  >
+    <ul class="flex flex-wrap gap-2">
+      {
+        catalogos.map((c) => (
+          <li>
+            <a
+              href={`#${c.id}`}
+              class="inline-block rounded-full border border-marca-200 bg-white px-4 py-2 text-sm font-medium text-marca-700 transition-colors hover:bg-marca-50"
+            >
+              {c.titulo}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </Seccion>
+
+  {
+    catalogos.map((c) => (
+      <Seccion id={c.id} titulo={c.titulo} subtitulo={c.descripcion}>
+        <ol class="mx-auto max-w-4xl space-y-6">
+          {c.paginas.map((pagina, i) => (
+            <li>
+              <Image
+                src={imagenCatalogo(pagina)}
+                alt={`${c.titulo} — página ${i + 1}`}
+                class="w-full rounded-xl border border-gray-200 shadow-sm"
+                widths={[640, 960, 1280]}
+                sizes="(min-width: 1024px) 896px, 95vw"
+              />
+            </li>
+          ))}
+        </ol>
+      </Seccion>
+    ))
+  }
+
+  <Seccion tono="oscuro" titulo="¿Vio algo que le interesa?">
+    <BotonWhatsApp variante="contraste" etiqueta="Cotizar por WhatsApp" />
+  </Seccion>
+</BaseLayout>

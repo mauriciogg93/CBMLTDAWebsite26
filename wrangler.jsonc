@@ -1,0 +1,22 @@
+// Deploy to Cloudflare Workers (static assets, no adapter). This is the WHOLE deploy
+// config: Cloudflare Workers Builds reads it from the repo on every push to main (see PLAN.md).
+// Manual (first deploy or debugging): npx wrangler login (once) → npm run deploy
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "cbmltda",
+  "compatibility_date": "2026-08-31",
+  "assets": {
+    "directory": "./dist",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+  // Custom domain: declarative, nothing in the dashboard. Uncomment once WordPress is to be
+  // switched off and the cbmltda.com.co zone already lives in Cloudflare
+  // (`dig NS cbmltda.com.co` must show *.ns.cloudflare.com). On the next deploy Cloudflare
+  // creates the DNS records and the certificate for both hostnames. Hostnames only: no
+  // scheme, no path.
+  // "routes": [
+  //   { "pattern": "cbmltda.com.co", "custom_domain": true },
+  //   { "pattern": "www.cbmltda.com.co", "custom_domain": true }
+  // ]
+}
