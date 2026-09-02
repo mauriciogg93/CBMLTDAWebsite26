@@ -71,11 +71,15 @@ Legend: `[x]` done · `[ ]` pending · 🤖 the assistant does it · 🧑 only t
 
 ## 5. Go-live (Cloudflare Workers)
 
-- [ ] 🧑 R1: connect the repo to Cloudflare Workers Builds (it makes the first deploy)
-- [ ] 🤖 Post-deploy verification:
-      `npm run verify -- https://cbmltdawebsite26.<account>.workers.dev`
+- [x] 🧑 R1: connect the repo to Cloudflare Workers Builds (it makes the first deploy)
+      (2026-09-02: Worker `cbmltdawebsite26` live at `cbmltdawebsite26.mauriciogg93.workers.dev`)
+- [x] 🤖 Post-deploy verification:
+      `npm run verify -- https://cbmltdawebsite26.mauriciogg93.workers.dev` (2026-09-02: 18 ok;
+      the only failure is `og:image`, an absolute URL that WordPress still serves until the
+      domain switches)
 - [ ] 🤝 Review the site on workers.dev and decide when to switch WordPress off
-- [ ] 🧑 R2: move the DNS of cbmltda.com.co to Cloudflare (at DigitalOcean today)
+- [x] 🧑 R2: move the DNS of cbmltda.com.co to Cloudflare (2026-09-02: nameservers are
+      `nina`/`rajeev.ns.cloudflare.com`; Zoho MX + SPF imported; A record still WordPress)
 - [ ] 🤖 Enable the `routes` block of `wrangler.jsonc` and push: that deploy creates the DNS
       records and the certificate for `cbmltda.com.co` and `www.cbmltda.com.co`
 - [ ] 🧑 R3: zone settings after the first deploy with the domain (Always Use HTTPS, www → root)
