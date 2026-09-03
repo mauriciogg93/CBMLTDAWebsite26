@@ -280,3 +280,13 @@ pending.
   as WordPress so the links CBM gave its customers keep working after the domain switch. The
   page is linked from `/material-apoyo/` and from the TBM EP100 product page through a new
   optional `apoyo` field of `Producto` (rendered by `[slug].astro` under the CTA box).
+- **2026-09-02** — Conflict-free publishing from several computers on one `main`. AGENTS.md
+  §1.2 gains step 0 (sync before touching anything: commit leftovers, `git switch main`,
+  `git pull --rebase origin main`, abort a stuck rebase) and a conflict recovery in step 3
+  (never edit markers: `git rebase --abort`, keep the commits on `pendiente/…`, `git reset
+  --hard origin/main`, redo the change on the fresh files, verify, push; verify again after
+  any rebase that brought commits). `.gitattributes` gives PLAN.md `merge=union` (both sides
+  kept, no markers). `npm run doctor` now fetches `origin/main` and reports ahead / behind /
+  diverged, plus a rebase or merge left in progress, each with the command to run.
+  DEVELOPMENT.md §8 explains why stash + pull + pop is not a transaction and commit + rebase
+  + abort is. AGENTS.md stays under 12,000 characters.

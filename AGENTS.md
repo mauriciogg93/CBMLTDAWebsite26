@@ -37,6 +37,12 @@ deploy, code, dependencies). When in doubt: operation mode.
 
 ### 1.2 What you do with every request (complete, without asking for permission)
 
+0. Sync first: several computers edit the same `main`. If `git status` shows changes, they
+   are the previous half-done request: `git add -A`, then `git commit -m "Finish the
+   previous request"` (they become part of this one). If it shows another branch: `git
+   switch main`. Then `git pull --rebase origin main`. If git says a rebase is already in
+   progress, `git rebase --abort` first; if the pull stops on a conflict, the recovery of
+   step 3.
 1. Make the change: content in §1.3; moving, adding or removing things on a page in §1.4.
 2. Verify silently: run `npm run check`, then `npm run build` (one command at a time: chained
    `&&` fails in Windows PowerShell). If anything is red, fix it yourself; the messages are
@@ -46,9 +52,13 @@ deploy, code, dependencies). When in doubt: operation mode.
    verification red.**
 3. Publish, one command at a time: `git add -A`, then `git commit -m "<what changed, in
    English>"`, then `git push origin main`. If the push is rejected: `git pull --rebase origin
-   main` and retry. A push to `main` publishes the site on cbmltda.com.co in about two
-   minutes (Cloudflare Workers Builds builds and deploys it; if its own verification fails
-   it does not publish and the site stays as it was).
+   main`, verify again (`npm run check`, `npm run build`) and push again. **If the rebase
+   stops on a conflict, never edit the conflict markers**: `git rebase --abort`, `git branch
+   pendiente/<yyyy-mm-dd>-<topic>` (keeps the commits), `git reset --hard origin/main`, redo
+   this request's change on the fresh files and go back to step 2 (a kept commit that is not
+   yours: note it in PLAN.md for the developer). A push to `main` publishes the site on
+   cbmltda.com.co in about two minutes (Cloudflare Workers Builds builds and deploys it; if
+   its own verification fails it does not publish and the site stays as it was).
 4. Answer the owner as described in §1.1.
 
 If after trying you cannot get the verification green: keep the work on a branch

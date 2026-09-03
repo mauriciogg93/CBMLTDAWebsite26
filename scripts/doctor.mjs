@@ -1,7 +1,8 @@
 // Environment check for the machine where the assistant (or the developer) runs: the tools,
 // access and configuration this repo needs to change the site and publish it. Zero
-// dependencies, cross-platform (macOS, Windows, Linux). It modifies nothing and pushes
-// nothing: the write-access check is a `git push --dry-run`.
+// dependencies, cross-platform (macOS, Windows, Linux). It changes nothing in the working
+// tree and pushes nothing: the only remote calls are a `git fetch` of origin/main (to report
+// how far local main is from it) and a `git push --dry-run` (write access).
 //   npm run doctor
 // Exit code 1 if any hard check fails; "warn" lines are things to look at, not blockers.
 // Operation mode (AGENTS.md) runs it when a tool, an access or the publishing fails and
@@ -164,7 +165,14 @@ if (inRepo) {
   const branch = run('git', ['rev-parse', '--abbrev-ref', 'HEAD']).out;
   if (branch === 'main') ok('on branch main'); else note(`on branch ${branch || '(detached)'}`, 'operation mode publishes from main: git switch main');
   const dirty = run('git', ['status', '--porcelain']).out;
-  if (!dirty) ok('working tree clean'); else note(`${dirty.split('\n').length} uncommitted change(s)`, 'a previous request may be half done: git status');
+  if (!dirty) ok('working tree clean'); else note(`${dirty.split('\n').length} uncommitted change(s)`, 'a previous request may be half done: git status (AGENTS.md §1.2 step 0 commits them)');
+
+  // A pull that stopped on a conflict leaves git mid-rebase (or mid-merge): every later git
+  // command fails until it is aborted. AGENTS.md §1.2 step 3 has the recovery.
+  const stuck = [['rebase-merge', 'rebase'], ['rebase-apply', 'rebase'], ['MERGE_HEAD', 'merge']]
+    .find(([marker]) => { const path = run('git', ['rev-parse', '--git-path', marker]).out; return path && existsSync(path); });
+  if (stuck) bad(`a ${stuck[1]} is in progress (a previous pull stopped on a conflict)`, `git ${stuck[1]} --abort, then git status; recovery in AGENTS.md §1.2 step 3`);
+  else ok('no rebase or merge in progress');
 }
 
 // ---- 3. Access -------------------------------------------------------------------------
@@ -183,11 +191,24 @@ if (inRepo) {
   else if (read.timedOut) bad('read access to origin', 'no answer in 20 s — an interactive prompt (password, SSH passphrase) or no network');
   else bad('read access to origin', lastLine(read.err) || 'main not found on origin');
 
+  // Several computers publish on main: say how far this one is from origin before it edits
+  // anything. `git fetch` only updates origin/main; it touches no local branch or file.
+  if (read.ok && read.out) {
+    const fetched = run('git', ['fetch', '--quiet', 'origin', 'main']);
+    const counts = fetched.ok ? run('git', ['rev-list', '--left-right', '--count', 'main...origin/main']) : fetched;
+    const [ahead, behind] = counts.ok ? counts.out.split(/\s+/).map(Number) : [];
+    if (!counts.ok) note('could not compare main with origin/main', lastLine(counts.err) || 'git fetch origin main');
+    else if (!ahead && !behind) ok('main in sync with origin/main');
+    else if (!ahead) note(`main is ${behind} commit(s) behind origin/main (another computer published)`, 'git pull --rebase origin main before changing anything (AGENTS.md §1.2 step 0)');
+    else if (!behind) note(`main is ${ahead} commit(s) ahead of origin/main (not published)`, 'a previous push did not happen: verify (npm run check, npm run build) and git push origin main');
+    else note(`main and origin/main diverged (${ahead} local, ${behind} remote commit(s))`, 'git pull --rebase origin main; if it stops on a conflict, the recovery in AGENTS.md §1.2 step 3');
+  }
+
   const push = run('git', ['push', '--dry-run', 'origin', 'main']);
   if (push.ok) ok('write access to origin (git push --dry-run)');
   else if (push.timedOut) bad('write access to origin', 'no answer in 20 s — an interactive prompt (password, SSH passphrase) or no network');
   else if (/denied|permission|authentication|could not read username|403|401|publickey/i.test(push.err)) bad('write access to origin', `${lastLine(push.err)} — the owner as a collaborator with write access (HTTPS + Git Credential Manager on Windows) or this machine's SSH key as a deploy key with write access`);
-  else if (/fetch first|non-fast-forward|rejected/i.test(push.err)) note('local main is behind origin', 'git pull --rebase origin main before publishing');
+  else if (/fetch first|non-fast-forward|rejected/i.test(push.err)) note('local main is behind origin', 'git pull --rebase origin main before publishing (AGENTS.md §1.2 step 0)');
   else note('write access to origin unclear', lastLine(push.err) || lastLine(push.out));
 }
 

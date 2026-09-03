@@ -62,13 +62,15 @@ scripts/                  check-links.mjs (postbuild), verify-deploy.sh (npm run
                           lib/chrome.mjs (local Chrome over the DevTools Protocol; CHROME env var
                           overrides the per-platform default path), shrink-image.mjs (photo
                           resize used in operation mode, via Astro's sharp), doctor.mjs (npm run
-                          doctor: tools, repo, access and configuration of the machine; pushes
-                          nothing). Zero dependencies.
+                          doctor: tools, repo, access and configuration of the machine, how far
+                          main is from origin/main, a rebase left in progress; pushes nothing).
+                          Zero dependencies.
 wrangler.jsonc            the whole deploy config: assets, the domain's `routes`, workers.dev, previews
 .node-version             Node 24: Workers Builds uses the same major as the local machine
 asistente.command         double click opens Antigravity CLI with automatic approval and a first message
                           that makes it read AGENTS.md (macOS); asistente.cmd is the Windows counterpart
-.gitattributes            LF on every platform (scripts and Node need it); CRLF only for asistente.cmd
+.gitattributes            LF on every platform (scripts and Node need it); CRLF only for asistente.cmd;
+                          PLAN.md merges with `union` (both sides kept, never conflict markers)
 GUIA-PARA-CBM.md          one-page guide for the owner, in Spanish, nothing technical
 AGENTS.md                 rules every assistant loads: operation mode (≤ 12,000 chars, Antigravity's limit)
 DEVELOPMENT.md            this file: the developer reference, read on demand in development mode
@@ -82,8 +84,9 @@ There is no `.github/workflows/`: the CI/CD is Cloudflare Workers Builds (see §
   `npm run doctor` green. It checks Node against `.node-version` and the `brand` minimum,
   npm, git, headless Chrome, `agy` / `claude`, the launchers, `node_modules` and `sharp`, the
   `@emnapi` lockfile entries, `CLAUDE.md` as a symlink, git identity, origin, branch and
-  clean tree, network, read and write access to origin (`git push --dry-run`, nothing is
-  pushed) and port 4321. `FAIL` blocks publishing; `warn` is something to look at. Then
+  clean tree, no rebase or merge left in progress, network, read and write access to origin
+  (`git push --dry-run`, nothing is pushed), how far `main` is from `origin/main` (a `git
+  fetch`) and port 4321. `FAIL` blocks publishing; `warn` is something to look at. Then
   `npm run build`.
 - **New product**: photos to `src/assets/products/` → ONE new object in
   `src/data/products.ts` (the first image of the array is the cover; `corto` ≤ 160
@@ -187,3 +190,27 @@ traffic, not deploys.
 - In **operation mode** (AGENTS.md §1) publishing is part of every request: always commit + push.
 - In **development mode** local commits are free, but NEVER push `main`, deploy or publish
   unless the developer explicitly asks for it in the conversation.
+
+**Several computers commit to the same `main`** (the owner's machine in operation mode, the
+developer's machines, parallel sessions in one working copy). The protocol that keeps that
+conflict-free is in AGENTS.md §1.2 (steps 0 and 3) and applies in development mode too:
+
+- **Sync at the start of every task**, not only when a push is rejected: with a clean tree
+  and nothing unpushed, `git pull --rebase origin main` is a fast-forward and cannot
+  conflict. The conflict window shrinks from "days since the last session" to the minutes
+  the task takes. Leftover uncommitted changes are committed first, never stashed.
+- **Commit first, rebase after.** `git stash` + pull + `stash pop` is not a transaction:
+  the pop can conflict too and leaves markers in the tree with the stash still around
+  (`git pull --rebase --autostash` has the same hole). A local commit followed by `git pull
+  --rebase` is the atomic version: a conflicting rebase is undone whole with `git rebase
+  --abort`, the commit survives, the tree is clean.
+- **On a conflict, nobody edits markers.** Abort, keep the commits on a `pendiente/…`
+  branch, `git reset --hard origin/main`, redo the change on the fresh files, verify, push.
+  The assistant has the request in context, so redoing it is cheaper and safer than
+  resolving hunks. After any rebase that brought commits, `check` + `build` run again
+  before the push, and commits you did not author are named to the developer.
+- **PLAN.md is the hot file** (every session appends to it): `.gitattributes` gives it
+  `merge=union`, so git keeps both sides instead of stopping. If both sides edit the same
+  line, both versions stay; tidy it when you see it.
+- `npm run doctor` reports a rebase left in progress and how far `main` is from
+  `origin/main` (ahead, behind, diverged) with the command to run.

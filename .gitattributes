@@ -2,3 +2,6 @@
 # except the Windows launcher, which cmd.exe reads best with CRLF.
 * text=auto eol=lf
 *.cmd text eol=crlf
+# PLAN.md is a log that every session, on every computer, appends to: on a conflict keep
+# both sides instead of stopping with markers (a rebase honors this driver too).
+PLAN.md merge=union
