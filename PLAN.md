@@ -79,18 +79,18 @@ Legend: `[x]` done · `[ ]` pending · 🤖 the assistant does it · 🧑 only t
       `npm run verify -- https://cbmltdawebsite26.mauriciogg93.workers.dev` (2026-09-02: 18 ok;
       the only failure is `og:image`, an absolute URL that WordPress still serves until the
       domain switches)
-- [ ] 🤝 Review the site on workers.dev and decide when to switch WordPress off
+- [x] 🤝 Review the site on workers.dev and decide when to switch WordPress off (2026-09-02)
 - [x] 🧑 R2: move the DNS of cbmltda.com.co to Cloudflare (2026-09-02: nameservers are
       `nina`/`rajeev.ns.cloudflare.com`; Zoho MX + SPF imported; A record still WordPress)
-- [ ] 🤖 Enable the `routes` block of `wrangler.jsonc` and push: that deploy creates the DNS
+- [x] 🤖 Enable the `routes` block of `wrangler.jsonc` and push: that deploy creates the DNS
       records and the certificate for `cbmltda.com.co` and `www.cbmltda.com.co`
-      (2026-09-02: the first build failed with API error 100117, the apex `A` and the `www`
-      `CNAME` imported from DigitalOcean block the Custom Domain and wrangler cannot override
-      them. The developer deleted both records at 15:45 UTC and the build was retried. That
-      first deploy also turned workers.dev off; `workers_dev: true` is now declared)
+      (2026-09-02 16:01 UTC: live, both hostnames served by the Worker. The first build
+      failed with API error 100117 until the developer deleted the apex `A` and the `www`
+      `CNAME`; see DEVELOPMENT.md § lessons. WordPress at DigitalOcean can be switched off)
 - [ ] 🧑 R3: zone settings after the first deploy with the domain (Always Use HTTPS, www → root)
 - [ ] 🧑 R4: switch off the scripts the zone injects (JavaScript Detections, Web Analytics)
-- [ ] 🤖 `npm run verify` all green with zero warnings; Lighthouse
+- [ ] 🤖 `npm run verify` all green with zero warnings; Lighthouse (2026-09-02 16:05 UTC on
+      the domain: 18 ok, fails http→https and warns www→apex, both expected until R3)
 - [x] 🤖 R5: Preview URLs, declared in `wrangler.jsonc` (2026-09-02; live with the next
       successful deploy)
 - [ ] 🧑 R6: Google Search Console with the new sitemap
@@ -184,7 +184,7 @@ pending.
 
 | Topic | Status |
 | --- | --- |
-| When to switch WordPress off and point the domain? | Pending on the human after reviewing the site on workers.dev (R1) and moving the DNS (R2) |
+| When to switch WordPress off and point the domain? | Done 2026-09-02 16:01 UTC: the domain serves the Worker. WordPress at DigitalOcean can be switched off |
 | 301 redirects for old URLs? | Wait for Search Console data; the Worker can add them if needed |
 | Show prices or availability on product pages? | Pending on CBM; omitted on purpose today |
 | YouTube embeds | The iframe (youtube-nocookie) sets a cookie and lowers Best Practices to 96 on product pages with a video. A facade (thumbnail + click) avoids it but needs a small script, and today the only JS is the menu |
