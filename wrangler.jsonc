@@ -15,6 +15,11 @@
   // `routes` block silently switches workers.dev off on deploy.
   "workers_dev": true,
   "preview_urls": true,
+  // Worker Previews: once Settings → Builds is switched to Previews (one-time, irreversible), each
+  // branch builds its own Preview, <branch>-cbmltdawebsite26.<account>.workers.dev, with
+  // `npx wrangler preview` (wrangler 4.135 or later), which fails without this block. Empty: the
+  // Preview needs no settings of its own. `wrangler deploy` ignores it.
+  "previews": {},
   // Custom domain: declarative, nothing in the dashboard. The cbmltda.com.co zone lives in
   // Cloudflare (`dig NS cbmltda.com.co` shows *.ns.cloudflare.com); on each deploy Cloudflare
   // keeps the DNS records and the certificate for both hostnames. Hostnames only: no scheme,
