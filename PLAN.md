@@ -180,6 +180,8 @@ content nor its layout on a page (design, new pages, forms, integrations) and th
 could not publish (with the `pendiente/…` branch and the technical details). Empty = nothing
 pending.
 
+- **2026-11-06** — New page requested: "Manual-LedV3" (initially blank). Per AGENTS.md §1.5, creating new pages requires developer work.
+
 ## Open decisions
 
 | Topic | Status |
