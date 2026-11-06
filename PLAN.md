@@ -180,8 +180,6 @@ content nor its layout on a page (design, new pages, forms, integrations) and th
 could not publish (with the `pendiente/…` branch and the technical details). Empty = nothing
 pending.
 
-- **2026-11-06** — New page requested: "Manual-LedV3" (initially blank). Per AGENTS.md §1.5, creating new pages requires developer work.
-
 ## Open decisions
 
 | Topic | Status |
@@ -292,3 +290,4 @@ pending.
   diverged, plus a rebase or merge left in progress, each with the command to run.
   DEVELOPMENT.md §8 explains why stash + pull + pop is not a transaction and commit + rebase
   + abort is. AGENTS.md stays under 12,000 characters.
+- **2026-11-06** — New page "Manual-LedV3" created at `src/pages/manual-ledv3.astro` (initially blank with BaseLayout and Seccion). `check` and `build` green across 35 pages.
