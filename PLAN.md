@@ -291,3 +291,4 @@ pending.
   DEVELOPMENT.md §8 explains why stash + pull + pop is not a transaction and commit + rebase
   + abort is. AGENTS.md stays under 12,000 characters.
 - **2026-11-06** — New page "Manual-LedV3" created at `src/pages/manual-ledv3.astro` (initially blank with BaseLayout and Seccion). `check` and `build` green across 35 pages.
+- **2026-11-06** — Updated title of `src/pages/manual-ledv3.astro` to "Página en construcción". `check` and `build` green.
