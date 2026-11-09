@@ -1,15 +1,17 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Seccion from '../components/Seccion.astro';
+import VideoYouTube from '../components/VideoYouTube.astro';
 import { SITE } from '../site.config';
 ---
 
 <BaseLayout
-  titulo="Página en construcción"
-  descripcion={`Página en construcción para Manual-LedV3 de ${SITE.nombre}.`}
+  titulo="Manual audiovisual Lámpara LED V3"
+  descripcion={`Manual audiovisual Lámpara LED V3 de ${SITE.nombre}.`}
 >
-  <Seccion nivel="h1" titulo="Página en construcción">
+  <Seccion nivel="h1" titulo="Manual audiovisual Lámpara LED V3">
     <div class="prose-cbm max-w-3xl space-y-5 text-gray-700">
+      <VideoYouTube id="JU4XnPbprbs" titulo="Manual audiovisual Lámpara LED V3" />
     </div>
   </Seccion>
 </BaseLayout>
